@@ -1,3 +1,5 @@
+(** System trust discovery and incident-specific certificate authentication. *)
+
 val authenticator :
   ?crls:X509.CRL.t list ->
   ?allowed_hashes:Digestif.hash' list ->
@@ -8,7 +10,12 @@ val authenticator :
     constructs an authenticator with the current timestamp {!Ptime_clock.now},
     and the provided [~crls] and [~allowed_hashes] arguments. The resulting
     authenticator can be used for {!Tls.Config.client}. Returns [Error `Msg msg]
-    if detection did not succeed. *)
+    if detection did not succeed.
+
+    Compromised eMudhra intermediate keys are rejected in supplied certificates,
+    verified paths, and trust anchors, including custom trust anchors. This is
+    incident-specific policy, not general operating-system revocation support.
+*)
 
 val trust_anchors : unit -> (string, [> `Msg of string ]) result
 (** [trust_anchors ()] detects the root CAs (trust anchors) in the operating
@@ -20,4 +27,6 @@ val trust_anchors : unit -> (string, [> `Msg of string ]) result
     value is used as path to the system trust anchors. Otherwise, if
     [NIX_SSL_CERT_FILE] is set, its value is used.
 
-    The successful result is a list of pem-encoded X509 certificates. *)
+    The successful result is a list of pem-encoded X509 certificates. This is
+    raw trust-store data: it does not apply the key distrust policy enforced by
+    {!authenticator} or operating-system distrust settings. *)

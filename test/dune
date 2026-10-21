@@ -1,3 +1,15 @@
 (test
  (name tests)
+ (modules tests)
  (libraries ca-certs fmt alcotest logs.fmt))
+
+; Compile the private policy source to exercise it with a fixed clock.
+
+(copy_files ../lib/distrust.ml)
+
+(test
+ (name distrust_tests)
+ (modules distrust_tests distrust)
+ (deps
+  (glob_files fixtures/*))
+ (libraries ca-certs alcotest bos fpath unix))

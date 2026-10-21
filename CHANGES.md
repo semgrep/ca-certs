@@ -1,3 +1,9 @@
+# Unreleased
+
+* Reject eight compromised eMudhra intermediate keys during authentication,
+  including cross-signed certificates and custom trust anchors.
+  `trust_anchors` returns raw, unfiltered certificates.
+
 # v1.0.3 (2025-05-07)
 
 * Remove extended-validation.badssl.com test case (which used a digicert

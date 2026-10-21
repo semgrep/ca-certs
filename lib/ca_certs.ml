@@ -1,3 +1,6 @@
+(** Discover system and custom trust anchors and construct a distrust-aware
+    authenticator. *)
+
 let src = Logs.Src.create "ca-certs" ~doc:"CA certificates"
 
 module Log = (val Logs.src_log src : Logs.LOG)
@@ -178,4 +181,4 @@ let authenticator ?crls ?allowed_hashes () =
   | [] -> Error (`Msg ("ca-certs: empty trust anchors.\n" ^ issue))
   | cas ->
       let time () = Some (Ptime_clock.now ()) in
-      Ok (X509.Authenticator.chain_of_trust ?crls ?allowed_hashes ~time cas)
+      Ok (Distrust.authenticator ?crls ?allowed_hashes ~time cas)

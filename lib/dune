@@ -1,6 +1,7 @@
 (library
  (name ca_certs)
  (public_name ca-certs)
+ (private_modules distrust)
  (libraries mirage-crypto x509 bos fpath logs ptime.clock.os digestif ohex)
  (foreign_stubs
   (language c)
